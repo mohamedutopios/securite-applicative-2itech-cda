@@ -40,6 +40,16 @@ builder.Services.AddAuthorization(options =>
 
 ));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", builder =>
+    {
+        builder.WithOrigins("http://localhost:3001")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
+});
 
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -59,6 +69,7 @@ using (var scope = app.Services.CreateScope())
     SeedData.Initialize(productContext);
 }
 
+app.UseCors("AllowReactApp");
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
